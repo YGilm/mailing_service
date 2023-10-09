@@ -4,9 +4,9 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Client(models.Model):
-    email = models.EmailField(unique=True, verbose_name='электронная почта')
+    email = models.EmailField(unique=True, verbose_name='Электронная почта')
     name = models.CharField(max_length=250, verbose_name='ФИО')
-    comment = models.TextField(max_length=250, verbose_name='комментарий', **NULLABLE)
+    comment = models.TextField(max_length=250, verbose_name='Комментарий', **NULLABLE)
 
     def __str__(self):
         return f'{self.name} ({self.email})'
@@ -23,6 +23,7 @@ class MailingSettings(models.Model):
     time = models.DateTimeField()
     periodicity = models.CharField(max_length=1, choices=TIME_CHOICES)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    recipients = models.ManyToManyField(Client, through='MailingLog', verbose_name='Получатели')
 
     def __str__(self):
         return f'{self.time}, {self.periodicity}, {self.status}'
@@ -49,7 +50,7 @@ class MailingLog(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='logs')
     mailing_settings = models.ForeignKey(MailingSettings, on_delete=models.CASCADE, related_name='logs')
     attempt_time = models.DateTimeField(auto_now_add=True, verbose_name='дата последней попытки')
-    status = models.BooleanField(verbose_name='статус отправки')
+    status = models.BooleanField(default=False, verbose_name='статус отправки')
     server_response = models.TextField(verbose_name='ответ почтового сервиса', **NULLABLE)
 
     def __str__(self):
