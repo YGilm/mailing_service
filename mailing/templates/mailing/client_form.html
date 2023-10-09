@@ -1,0 +1,43 @@
+{% extends 'mailing/base.html' %}
+{% block extra_css %}
+<style>
+    .custom-input {
+        max-width: 400px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="py-5 text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light">Создание клиента</h1>
+            <p class="lead text-body-secondary">Здесь вы можете добавить клиента для рассылки введите его ФИО,
+                почту и оставьте коментарий.</p>
+            <p>
+                <a href="{% url 'mailing:mailing_list' %}" class="btn btn-primary my-2">К списку рассылок</a>
+                <a href="{% url 'mailing:client_list' %}" class="btn btn-secondary my-2">К списку клиентов</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <form method="post" class="mt-5">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+            <input type="email" name="{{ form.email.name }}" class="form-control custom-input" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            <input type="text" name="{{ form.name.name }}" class="form-control custom-input" id="{{ form.name.id_for_label }}" value="{{ form.name.value|default:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="{{ form.comment.id_for_label }}">{{ form.comment.label }}</label>
+            <textarea name="{{ form.comment.name }}" class="form-control custom-input" id="{{ form.comment.id_for_label }}">{{ form.comment.value|default:'' }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить клиента</button>
+    </form>
+</div>
+{% endblock %}

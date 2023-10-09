@@ -1,0 +1,65 @@
+{% extends "mailing/base.html" %}
+
+{% block content %}
+<style>
+    .detail-item {
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    .detail-title {
+        font-weight: bold;
+    }
+    .recipient-list li {
+        margin: 5px 0;
+    }
+    .static-textarea {
+        white-space: pre-wrap;
+    }
+    /* Стили для блока actions */
+    .actions {
+        padding-top: 15px;
+    }
+    .actions a {
+        display: block;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="col-md-6 mt-3">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="detail-item">
+                <div class="detail-title">Клиент:</div>
+                <div style="max-height: 150px; overflow-y: auto;">
+                    <ul class="recipient-list">
+                        {{ client.name }}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-title">Почта:</div>
+                <div>{{ client.email }}</div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-title">Комментарий:</div>
+                {% if object.comment %}
+                <div class="static-textarea">{{ object.comment }}</div>
+                {% else %}
+                <p>Не заполнено</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-4 actions">
+            <a href="{% url 'mailing:client_update' pk=object.pk %}" class="btn btn-primary mb-2">Редактировать</a>
+            <a href="{% url 'mailing:client_delete' pk=object.pk %}" class="btn btn-danger">Удалить</a>
+            <p>
+                <a href="{% url 'mailing:client_list' %}" class="btn btn-success">Список клиентов</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+<div class="container mt-3">
+    <ul class="list-group">
+        {% for client in object_list %}
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-md-5">
+                    <strong>{{ client.name }}</strong>
+                    <br>
+                    {{ client.email }}
+                </div>
+                <div class="col-md-5">
+                    <p class="text-muted">{{ client.comment }}</p>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'mailing:client_detail' client.id %}" class="btn btn-info btn-sm">Посмотреть</a>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="text-center mt-3">
+        <p>Добавьте своих клиентов</p>
+        <a href="{% url 'mailing:client_form' %}" class="btn btn-success btn-lg w-50">Создать клиента</a>
+    </div>
+</div>
+{% endblock %}
