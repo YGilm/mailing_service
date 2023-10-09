@@ -1,0 +1,26 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+<h2>Логи рассылки</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Клиент</th>
+        <th>Рассылка</th>
+        <th>Статус</th>
+        <th>Ответ сервера</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for log in logs %}
+    <tr style="color: {% if log.status %}green{% else %}red{% endif %};">
+        <td>{{ log.client }}</td>
+        <td>{{ log.mailing_settings.time }}</td>
+        <td>{{ log.status }}</td>
+        <td>{{ log.server_response }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

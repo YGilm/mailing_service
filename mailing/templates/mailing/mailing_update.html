@@ -1,0 +1,102 @@
+{% extends "mailing/base.html" %}
+
+{% block content %}
+<style>
+    .detail-item {
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .detail-title {
+        font-weight: bold;
+    }
+    .recipient-list li {
+        margin: 5px 0;
+    }
+    .static-textarea {
+        white-space: pre-wrap;
+    }
+</style>
+
+<div class="container">
+    <h4 class="mb-4">Редактирование рассылки</h4>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row">
+            <!-- Левая колонка -->
+            <div class="col-md-6">
+                <div class="detail-item">
+                    <div class="detail-title">Получатели:</div>
+                    <div>
+                        <input type="checkbox" id="select_all"/> Выбрать всех<br>
+                        {{ form.recipients }}
+                        {% if form.recipients.errors %}
+                        <div class="errors">
+                            {{ form.recipients.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-title">Периодичность:</div>
+                    <div>
+                        {{ form.periodicity }}
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-title">Статус:</div>
+                    <div>
+                        {{ form.status }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая колонка -->
+            <div class="col-md-6">
+                <div class="detail-item">
+                    <div class="detail-title">Тема:</div>
+                    <div>
+                        {{ message_form.subject }}
+                        {% if message_form.subject.errors %}
+                        <div class="errors">
+                            {{ message_form.subject.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-title">Сообщение:</div>
+                    <div>
+                        {{ message_form.body }}
+                        {% if message_form.body.errors %}
+                        <div class="errors">
+                            {{ message_form.body.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="submit" value="Сохранить изменения" class="btn btn-primary mt-4">
+    </form>
+
+    <!-- JavaScript для функционала "Выбрать всех" -->
+    <script>
+        document.getElementById('select_all').addEventListener('click', function() {
+            var checkboxes = document.querySelectorAll('input[name="recipients"]');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+        });
+    </script>
+</div>
+{% endblock %}

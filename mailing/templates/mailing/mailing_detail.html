@@ -1,0 +1,88 @@
+{% extends "mailing/base.html" %}
+
+{% block content %}
+<style>
+    .detail-item {
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .detail-title {
+        font-weight: bold;
+    }
+    .recipient-list li {
+        margin: 5px 0;
+    }
+    .static-textarea {
+        white-space: pre-wrap;
+    }
+    /* Стили для блока actions */
+    .actions {
+        text-align: right;
+    }
+</style>
+
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-8">
+            <h4 class="mb-4">Рассылка {{ object.time }}, {{ object.get_periodicity_display }}</h4>
+        </div>
+        <div class="col-md-4 actions">
+            <a href="{% url 'mailing:mailing_logs' object.id %}" class="btn btn-success btn-lg">Посмотреть логи</a>
+        </div>
+    </div>
+    <!-- Левая колонка -->
+    <div class="col-md-6">
+        <div class="detail-item">
+            <div class="detail-title">Получатели:</div>
+            <div style="max-height: 150px; overflow-y: auto;">
+                <ul class="recipient-list">
+                    {% if clients %}
+                    {% for recipient in clients %}
+                    <li>{{ recipient.name }} ({{ recipient.email }})</li>
+                    {% endfor %}
+                    {% else %}
+                    <li>Получатели не выбраны</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="detail-item">
+            <div class="detail-title">Периодичность:</div>
+            <div>{{ object.get_periodicity_display }}</div>
+        </div>
+
+        <div class="detail-item">
+            <div class="detail-title">Статус:</div>
+            <div>{{ object.get_status_display }}</div>
+        </div>
+    </div>
+
+    <!-- Правая колонка -->
+    <div class="col-md-6">
+        <div class="detail-item">
+            <div class="detail-title">Тема:</div>
+            {% if object.messages.first.subject %}
+            <div class="static-textarea">{{ object.messages.first.subject }}</div>
+            {% else %}
+            <p>Не заполнено</p>
+            {% endif %}
+        </div>
+
+        <div class="detail-item">
+            <div class="detail-title">Сообщение:</div>
+            {% if object.messages.first.body %}
+            <div class="static-textarea">{{ object.messages.first.body|linebreaks }}</div>
+            {% else %}
+            <p>Не заполнено</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
