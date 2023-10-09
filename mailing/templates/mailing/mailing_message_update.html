@@ -1,0 +1,55 @@
+{% extends "mailing/base.html" %}
+
+{% block content %}
+<style>
+    .detail-item {
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .detail-title {
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    <h4 class="mb-4">Редактирование сообщения рассылки</h4>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row">
+            <!-- Левая колонка -->
+            <div class="col-md-6">
+                <div class="detail-item">
+                    <div class="detail-title">Тема:</div>
+                    <div>
+                        {{ form.subject }}
+                        {% if form.subject.errors %}
+                            <div class="errors">
+                                {{ form.subject.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-title">Сообщение:</div>
+                    <div>
+                        {{ form.body }}
+                        {% if form.body.errors %}
+                            <div class="errors">
+                                {{ form.body.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="submit" value="Сохранить изменения" class="btn btn-primary mt-4">
+    </form>
+</div>
+{% endblock %}

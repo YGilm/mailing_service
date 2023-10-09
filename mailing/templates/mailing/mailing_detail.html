@@ -31,11 +31,11 @@
         <div class="col-md-8">
             <h4 class="mb-4">Рассылка {{ object.time }}, {{ object.get_periodicity_display }}</h4>
         </div>
-        <div class="col-md-4 actions">
+         <div class="col-md-4 actions">
             <a href="{% url 'mailing:mailing_logs' object.id %}" class="btn btn-success btn-lg">Посмотреть логи</a>
+            <a href="{% url 'mailing:mailing_list' %}" class="btn btn-secondary btn-lg">Назад</a>
         </div>
-    </div>
-    <!-- Левая колонка -->
+
     <div class="col-md-6">
         <div class="detail-item">
             <div class="detail-title">Получатели:</div>
@@ -63,7 +63,6 @@
         </div>
     </div>
 
-    <!-- Правая колонка -->
     <div class="col-md-6">
         <div class="detail-item">
             <div class="detail-title">Тема:</div>

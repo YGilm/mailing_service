@@ -19,6 +19,10 @@ class ClientForm(forms.ModelForm):
 
 
 class MailingMessageForm(forms.ModelForm):
+    subject = forms.CharField(label='Тема')
+    body = forms.CharField(label='Сообщение', widget=forms.Textarea)
+
     class Meta:
         model = MailingMessage
         fields = ['subject', 'body']
+
