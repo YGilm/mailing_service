@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
 
@@ -84,26 +84,10 @@ class MailingUpdateView(UpdateView):
     template_name = 'mailing/mailing_update.html'
     success_url = reverse_lazy('mailing:mailing_list')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if not self.request.POST:
-            context['message_form'] = MailingMessageForm(instance=self.object.messages.first())
-        return context
-
     def form_valid(self, form):
-        context = self.get_context_data()
-        message_form = context['message_form']
-
-        if not message_form.is_valid():
-            return self.render_to_response(self.get_context_data(form=form))
-
         self.object = form.save()
         selected_recipients = form.cleaned_data.get('recipients')
         self.object.recipients.set(selected_recipients)
-
-        message = message_form.save(commit=False)
-        message.mailing_settings = self.object
-        message.save()
 
         # Логика на основе статуса
         if self.object.status == 'R':  # Если меняем статус на R (запущена) запускается рассылка.
@@ -115,6 +99,34 @@ class MailingUpdateView(UpdateView):
             pass
 
         return super().form_valid(form)
+
+
+class MailingMessageCreateView(CreateView):
+    model = MailingMessage
+    form_class = MailingMessageForm
+    template_name = 'mailing/mailing_message_create.html'
+    success_url = reverse_lazy('mailing:mailing_update')
+
+    def form_valid(self, form):
+        mailing = get_object_or_404(MailingSettings, pk=self.kwargs['pk'])
+        message = form.save(commit=False)
+        message.mailing_settings = mailing
+        message.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mailing_id'] = self.kwargs.get('pk')
+        return context
+
+
+class MailingMessageUpdateView(UpdateView):
+    model = MailingMessage
+    form_class = MailingMessageForm
+    template_name = 'mailing/mailing_message_update.html'
+
+    def get_success_url(self):
+        return reverse('mailing:mailing_update', args=[self.object.mailing_settings.pk])
 
 
 class ClientCreateView(CreateView):
