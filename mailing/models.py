@@ -34,8 +34,8 @@ class MailingSettings(models.Model):
 
 
 class MailingMessage(models.Model):
-    subject = models.CharField(max_length=255)
-    body = models.TextField()
+    subject = models.CharField(max_length=255, verbose_name='Тема сообщения')
+    body = models.TextField(verbose_name='Текст сообщения')
     mailing_settings = models.ForeignKey(MailingSettings, on_delete=models.CASCADE, related_name='messages')
 
     def __str__(self):
