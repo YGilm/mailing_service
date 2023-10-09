@@ -1,0 +1,39 @@
+{% extends "mailing/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<style>
+    .form-group {
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    .form-label {
+        font-weight: bold;
+    }
+</style>
+
+<div class="container mt-3">
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label class="form-label">Клиент:</label>
+            {{ form.name|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Почта:</label>
+            {{ form.email|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Комментарий:</label>
+            {{ form.comment|add_class:"form-control" }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Сохранить изменения</button>
+        <a href="{% url 'mailing:client_detail' pk=object.pk %}" class="btn btn-secondary ml-3">Отмена</a>
+    </form>
+</div>
+{% endblock %}

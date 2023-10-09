@@ -1,0 +1,68 @@
+{% extends 'mailing/base.html' %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}">
+<div class="container mt-5">
+    <h4 class="mb-4">Создание рассылки:</h4>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row">
+            <!-- Левая колонка -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="{{ form.recipients.id_for_label }}">Получатели</label>
+                    <input type="checkbox" id="select_all"/> Выбрать всех<br>
+                    {{ form.recipients }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.time.id_for_label }}">Время рассылки</label>
+                    {{ form.time }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.periodicity.id_for_label }}">Периодичность</label>
+                    {{ form.periodicity }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.status.id_for_label }}">Статус</label>
+                    {{ form.status }}
+                </div>
+            </div>
+
+            <!-- Правая колонка -->
+            <!-- Правая колонка -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="{{ message_form.subject.id_for_label }}">Тема рассылки</label>
+                    {{ message_form.subject }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ message_form.body.id_for_label }}">Сообщение</label>
+                    {{ message_form.body }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success btn-lg">Создать рассылку</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ form.media }}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+<!-- JavaScript для функционала "Выбрать всех" -->
+<script>
+document.getElementById('select_all').addEventListener('click', function() {
+    var options = document.querySelectorAll('#id_recipients option');
+    for (var option of options) {
+        option.selected = this.checked;
+    }
+});
+</script>
+{% endblock %}
