@@ -1,9 +1,8 @@
 from django.core.mail import send_mail
 from django.utils import timezone
-import os
 
 from config import settings
-from mailing.models import MailingSettings, Client, MailingMessage, MailingLog
+from mailing.models import MailingSettings, MailingMessage, MailingLog
 
 
 def send_mailing():
@@ -27,14 +26,16 @@ def send_mailing():
                 send_mail(
                     mailing_message.subject,
                     mailing_message.body,
-                    os.getenv(settings.EMAIL_HOST_USER),  # Отправитель
+                    settings.EMAIL_HOST_USER,  # Отправитель
                     [client.email],  # Получатель
                 )
             except Exception as e:
                 log_status = False
                 server_response = str(e)
-                # Здесь вы можете добавить дополнительное логирование ошибок
                 print(f"Ошибка отправки рассылки на {client.email}: {e}")
+            else:
+                log_status = True
+                server_response = "Успешно отправлено"
 
             # Логирование отправки
             MailingLog.objects.create(
