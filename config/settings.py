@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_crontab',
 
     'mailing',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -109,7 +110,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+# ==============================
+# INTERNATIONALIZATION
+# ==============================
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -121,7 +124,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+# ==============================
+# STATIC AND MEDIA FILES
+# ==============================
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_URL = 'static/'
@@ -130,17 +135,37 @@ STATICFILES_DIRS = (
     BASE_DIR / 'static',
 )
 
+# ==============================
+# DEFAULT MODEL FIELD CONFIGURATIONS
+# ==============================
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# ==============================
+# AUTHENTICATION AND USER MODEL
+# ==============================
+AUTH_USER_MODEL = 'users.User'
+# LOGIN_REDIRECT_URL = '/'
+# LOGOUT_REDIRECT_URL = '/'
+# LOGIN_URL = '/users/'
+
+# ==============================
+# CRONJOBS CONFIGURATIONS
+# ==============================
 CRONJOBS = [
     ('* * * * *', 'mailing.services.send_mailing')
 ]
 
+# ==============================
+# EMAIL CONFIGURATIONS
+# ==============================
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL') == 'True'
+
+# ==============================
+# CACHE CONFIGURATIONS
+# ==============================
