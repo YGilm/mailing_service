@@ -1,0 +1,27 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h2>Удаление блога</h2>
+            </div>
+            <div class="card-body">
+                <div class="col-12">
+                    <h5>Вы уверены, что хотите удалить блог {{ object.title }}?</h5>
+                    <div class="6">
+                    </div>
+                    <div class="6">
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Подтвердить удаление</button>
+                            <a href="{% url 'blog:blogpost_list' %}" class="btn btn-secondary">Отменить</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
