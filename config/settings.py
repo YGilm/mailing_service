@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     'mailing',
     'users',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -135,6 +136,9 @@ STATICFILES_DIRS = (
     BASE_DIR / 'static',
 )
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # ==============================
 # DEFAULT MODEL FIELD CONFIGURATIONS
 # ==============================
@@ -146,9 +150,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # AUTHENTICATION AND USER MODEL
 # ==============================
 AUTH_USER_MODEL = 'users.User'
-# LOGIN_REDIRECT_URL = '/'
-# LOGOUT_REDIRECT_URL = '/'
-# LOGIN_URL = '/users/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/users/'
 
 # ==============================
 # CRONJOBS CONFIGURATIONS
