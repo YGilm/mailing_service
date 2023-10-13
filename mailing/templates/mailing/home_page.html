@@ -4,7 +4,14 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/my_style.css' %}">
-
+<section class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">Создайте свою эффективную рассылку с нами!</h1>
+        <p>Просто, быстро и надежно. Начните сегодня и убедитесь в преимуществах нашего сервиса.</p>
+        <a href="{% url 'mailing:mailing_form' %}" class="btn btn-success my-2 w-25 mt-3 mx-auto d-block">Создать
+            рассылку</a>
+    </div>
+</section>
 <section class="py-5 text-center container">
     <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
