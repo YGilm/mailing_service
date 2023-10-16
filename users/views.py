@@ -1,11 +1,18 @@
-from django.shortcuts import redirect
+from django.contrib.auth import get_user_model, authenticate, login
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.views import View
 from django.views.generic.edit import CreateView
 from .models import User
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, BlockUserForm
 from . import services
+
+
+class ManagerOrSuperuserMixin:
+    # Функция для проверки, является ли пользователь менеджером или суперпользователем.
+    def is_manager_or_superuser(self):
+        return self.request.user.is_authenticated and (self.request.user.is_superuser or self.request.user.is_manager)
 
 
 class RegisterView(CreateView):
@@ -44,3 +51,43 @@ class EmailVerificationView(View):
             messages.error(request, 'Неверная или устаревшая ссылка подтверждения.')
 
         return redirect('users:login')
+
+
+# def login_view(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             if user.is_active:
+#                 login(request, user)
+#                 return redirect('home_page')
+#             else:
+#                 messages.error(request, 'Ваш аккаунт заблокирован. Обратитесь в техническую поддержку.')
+#                 return redirect('users:login')
+#         else:
+#             messages.error(request, 'Неверный логин или пароль.')
+#             return redirect('users:login')
+
+
+class BlockUserView(ManagerOrSuperuserMixin, View):
+    template_name = 'users/block_user.html'
+
+    def get(self, request):
+        form = BlockUserForm()
+        users = get_user_model().objects.all()
+        return render(request, self.template_name, {'form': form, 'users': users})
+
+    def post(self, request):
+        form = BlockUserForm(request.POST)
+        if form.is_valid():
+            user_id = form.cleaned_data['user_id']
+            try:
+                User = get_user_model()
+                user_to_block = User.objects.get(pk=user_id)
+                user_to_block.is_active = not user_to_block.is_active
+                user_to_block.save()
+                print("User blocked successfully")
+                return redirect('users:block_user')
+            except User.DoesNotExist:
+                form.add_error('user_id', 'Пользователь не найден.')
