@@ -4,54 +4,76 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/my_style.css' %}">
-<section class="jumbotron text-center">
-    <div class="container">
-        <h1 class="jumbotron-heading">Создайте свою эффективную рассылку с нами!</h1>
-        <p>Просто, быстро и надежно. Начните сегодня и убедитесь в преимуществах нашего сервиса.</p>
-        <a href="{% url 'mailing:mailing_form' %}" class="btn btn-success my-2 w-25 mt-3 mx-auto d-block">Создать
-            рассылку</a>
-    </div>
-</section>
-<section class="py-5 text-center container">
-    <div class="row py-lg-5">
+
+<div class="text-center container py-3">
+    <div class="row py-3">
         <div class="col-lg-6 col-md-8 mx-auto">
             <h1 class="fw-light">Mailing service</h1>
             <p class="lead text-body-secondary">Управление вашими рассылками</p>
-
-            <div class="row py-2">
-                <div class="col-md-6 col-sm-12 mb-2">
-                    <div class="card card-custom py-3">
-                        <div class="card-body">
-                            <p class="card-text">Количество рассылок: {{ object_list.count }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-12 mb-2">
-                    <div class="card card-custom py-3">
-                        <div class="card-body">
-                            <p class="card-text">Количество активных рассылок: {{ active_mailings.count }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row py-2">
-                <div class="col-md-3 col-sm-12"></div>
-                <div class="col-md-6 col-sm-12 mb-2">
-                    <div class="card card-custom py-3">
-                        <div class="card-body">
-                            <p class="card-text">Количество уникальных клиентов: {{ clients_list.count }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <p class="py-1 text-body-secondary">Авторизируйтесь для начала работы</p>
             <p>
-                <a href="{% url 'mailing:mailing_list' %}" class="btn btn-success my-2 w-75">Рассылки</a>
+                <a href="{% url 'mailing:mailing_list' %}" class="btn btn-success my-1 w-75">Рассылки</a>
             </p>
             <p>
-                <a href="{% url 'mailing:client_list' %}" class="btn btn-success my-2 w-75">Клиенты</a>
-            <p/>
+                <a href="{% url 'mailing:client_list' %}" class="btn btn-success my-1 w-75">Клиенты</a>
+            </p>
+            <p>
+                <a href="{% url 'users:block_user' %}" class="btn btn-danger my-1 w-75">Блокировать пользователей</a>
+            </p>
         </div>
     </div>
-</section>
+</div>
+
+<div class="text-center container py-3">
+    <div class="row py-2">
+        <div class="col-md-4 col-sm-12 mb-2">
+            <div class="card card-custom py-3">
+                <div class="card-body">
+                    <p class="card-text">Количество рассылок: {{ object_list.count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-2">
+            <div class="card card-custom py-3">
+                <div class="card-body">
+                    <p class="card-text">Количество активных рассылок: {{ active_mailings.count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-2">
+            <div class="card card-custom py-3">
+                <div class="card-body">
+                    <p class="card-text">Количество уникальных клиентов: {{ clients_list.count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Заголовок и текст с кнопкой -->
+<div class="text-center container py-3">
+    <h1 class="jumbotron-heading">Создайте свою эффективную рассылку с нами!</h1>
+    <p>Просто, быстро и надежно. Начните сегодня и убедитесь в преимуществах нашего сервиса.</p>
+    <a href="{% url 'mailing:mailing_form' %}"
+       class="btn btn-success my-2 w-25 mt-3 mx-auto d-block d-flex justify-content-center align-items-center">
+        Создать рассылку
+    </a>
+</div>
+
+<!-- Карточки для статей -->
+<div class="text-center container py-3">
+    <div class="row py-3">
+        {% for post in blog_posts %}
+        <div class="col-md-4 col-sm-12 mb-2">
+            <div class="card card-custom py-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <a href="{% url 'blog:blogpost_detail' post.pk %}" class="btn btn-secondary">Читать</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 {% endblock %}

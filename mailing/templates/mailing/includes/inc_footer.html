@@ -1,8 +1,20 @@
-<footer class="text-muted">
-    <div class="container">
-        <p class="float-right">
-            <a href="#">Back to top</a>
-        </p>
-        <p>Хотите узнать больше о мире рассылок? <a href="{% url 'blog:blogpost_list' %}">Посетите наш блог</a> и узнайте полезные советы и рекомендации.</p>
+<footer class="bg-dark text-white">
+    <div class="container py-1">
+        <div class="d-flex justify-content-between">
+            <p>
+                Хотите узнать больше о мире рассылок?
+                <a href="{% url 'blog:blogpost_list' %}" class="text-white" style="padding: 5px; border-radius: 3px;">
+                    Посетите наш блог
+                </a>
+                и узнайте полезные советы и рекомендации.
+            </p>
+            {% if current_page != 'home_page' %}
+            <a href="{% url 'mailing:home_page' %}" class="btn btn-outline-light btn-sm">Вернуться на главную
+                страницу</a>
+            {% else %}
+            <a href="{% url 'blog:blogpost_list' %}" class="btn btn-outline-light btn-sm">Наши статьи</a>
+            {% endif %}
+        </div>
     </div>
 </footer>
+
