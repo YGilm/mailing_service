@@ -1,3 +1,4 @@
+
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -20,7 +21,7 @@ class BlogPostListView(ListView):
         return query
 
 
-class BlogPostDetailView(LoginRequiredMixin, DetailView):
+class BlogPostDetailView(DetailView):
     """
     Отображение детальной информации о блоге и учет количества просмотров.
     """
@@ -81,3 +82,4 @@ class BlogPostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         return self.request.user.is_superuser
+

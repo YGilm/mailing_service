@@ -11,6 +11,13 @@ class MailingForm(forms.ModelForm):
             'time': DateTimePickerInput(format='%Y-%m-%d %H:%M:%S'),
         }
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(MailingForm, self).__init__(*args, **kwargs)
+        if user:
+            self.fields['recipients'].queryset = Client.objects.filter(owner=user)
+
+
 
 class ClientForm(forms.ModelForm):
     class Meta:

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 NULLABLE = {'blank': True, 'null': True}
@@ -7,6 +8,8 @@ class Client(models.Model):
     email = models.EmailField(unique=True, verbose_name='Электронная почта')
     name = models.CharField(max_length=250, verbose_name='ФИО')
     comment = models.TextField(max_length=250, verbose_name='Комментарий', **NULLABLE)
+    owner = models.ForeignKey(get_user_model(), related_name='clients', on_delete=models.CASCADE,
+                              verbose_name='Пользователь', **NULLABLE)
 
     def __str__(self):
         return f'{self.name} ({self.email})'
@@ -20,6 +23,7 @@ class MailingSettings(models.Model):
     TIME_CHOICES = [('D', 'Daily'), ('W', 'Weekly'), ('M', 'Monthly')]
     STATUS_CHOICES = [('C', 'Created'), ('R', 'Running'), ('E', 'Ended')]
 
+    owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name='Пользователь', **NULLABLE)
     time = models.DateTimeField()
     periodicity = models.CharField(max_length=1, choices=TIME_CHOICES)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES)
