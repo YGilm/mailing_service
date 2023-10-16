@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.urls import path, reverse_lazy, include
-
+from . import views
 from .apps import UsersConfig
-from .views import RegisterView, EmailVerificationView
+from .views import RegisterView, EmailVerificationView, BlockUserView
 from django.contrib.auth import views as auth_views
 
 app_name = UsersConfig.name
@@ -28,5 +28,6 @@ urlpatterns = [
     path('reset/done/',
          auth_views.PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'),
          name='password_reset_complete'),
-    # path('', include('django.contrib.auth.urls')),
+    path('block_user/', BlockUserView.as_view(), name='block_user'),
+
 ]
