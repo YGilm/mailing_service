@@ -13,6 +13,8 @@ urlpatterns = [
     path('mailings/create/', MailingCreateView.as_view(), name='mailing_form'),
     path('mailings/update/<int:pk>/', MailingUpdateView.as_view(), name='mailing_update'),
     path('mailings/delete/<int:pk>/', MailingDeleteView.as_view(), name='mailing_delete'),
+    # Manager status Ended
+    path('end_mailing/<int:pk>/', EndMailingView.as_view(), name='end_mailing'),
     # Client
     path('clients/create/', ClientCreateView.as_view(), name='client_form'),
     path('clients/', ClientListView.as_view(), name='client_list'),

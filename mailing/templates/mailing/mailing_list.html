@@ -1,5 +1,7 @@
 {% extends "mailing/base.html" %}
+
 {% load static %}
+{% load mailing_tags %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/my_style.css' %}">
@@ -22,9 +24,16 @@
                                 <div class="btn-group">
                                     <a href="{% url 'mailing:mailing_detail' item.pk %}"
                                        class="btn btn-sm btn-outline-secondary">View</a>
+                                    {% if user.is_superuser or item.owner == user %}
                                     <a href="{% url 'mailing:mailing_update' item.pk %}"
                                        class="btn btn-sm btn-outline-secondary">Edit</a>
                                     <a href="{% url 'mailing:mailing_delete' item.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                                    {% endif %}
+                                    {% if user|has_group:"Managers" and item.status == 'R' %}
+                                    <a href="{% url 'mailing:end_mailing' item.pk %}"
+                                       class="btn btn-sm rounded-pill btn-warning ">Остановить
+                                        рассылку</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -34,7 +43,8 @@
             </div>
         </div>
         <p>
-            <a href="{% url 'mailing:mailing_form' %}" class="btn btn-success my-2 w-25 mt-3 mx-auto d-block">Создать рассылку</a>
+            <a href="{% url 'mailing:mailing_form' %}" class="btn btn-success my-2 w-25 mt-3 mx-auto d-block">Создать
+                рассылку</a>
         </p>
     </div>
 </main>

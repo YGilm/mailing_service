@@ -1,5 +1,7 @@
 {% extends 'mailing/base.html' %}
+
 {% load static %}
+{% load mailing_tags %}
 
 {% block content %}
 
@@ -15,11 +17,15 @@
                 <a href="{% url 'mailing:mailing_list' %}" class="btn btn-success my-1 w-75">Рассылки</a>
             </p>
             <p>
+                {% if user.is_superuser %}
                 <a href="{% url 'mailing:client_list' %}" class="btn btn-success my-1 w-75">Клиенты</a>
+                {% endif %}
             </p>
+            {% if user.is_superuser or user|has_group:"Managers" %}
             <p>
-                <a href="{% url 'users:block_user' %}" class="btn btn-danger my-1 w-75">Блокировать пользователей</a>
+                <a href="{% url 'users:block_user' %}" class="btn btn-danger my-1 w-75">Список пользователей</a>
             </p>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -50,17 +56,17 @@
     </div>
 </div>
 
-<!-- Заголовок и текст с кнопкой -->
 <div class="text-center container py-3">
     <h1 class="jumbotron-heading">Создайте свою эффективную рассылку с нами!</h1>
     <p>Просто, быстро и надежно. Начните сегодня и убедитесь в преимуществах нашего сервиса.</p>
+    {% if user.is_superuser %}
     <a href="{% url 'mailing:mailing_form' %}"
        class="btn btn-success my-2 w-25 mt-3 mx-auto d-block d-flex justify-content-center align-items-center">
         Создать рассылку
     </a>
+    {% endif %}
 </div>
 
-<!-- Карточки для статей -->
 <div class="text-center container py-3">
     <div class="row py-3">
         {% for post in blog_posts %}
