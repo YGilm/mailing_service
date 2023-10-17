@@ -1,11 +1,11 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import PermissionsMixin
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
-from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView, RedirectView
 
 from mailing.forms import MailingForm, ClientForm, MailingMessageForm
-from users.views import ManagerOrSuperuserMixin
 from .models import MailingSettings, Client, MailingMessage, MailingLog
 from .services import send_mailing
 from blog.models import BlogPost
@@ -15,7 +15,7 @@ def home_view(request):
     all_mailings = MailingSettings.objects.all()
     active_mailings = MailingSettings.objects.filter(status='R')
     clients_list = Client.objects.all().distinct()
-    blog_posts = BlogPost.objects.all()[:3]  # Получаем, например, последние 3 поста
+    blog_posts = BlogPost.objects.all()[:3]
 
     context = {
         'object_list': all_mailings,
@@ -27,17 +27,32 @@ def home_view(request):
     return render(request, 'mailing/home_page.html', context)
 
 
-class MailingListView(LoginRequiredMixin, ManagerOrSuperuserMixin, ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     model = MailingSettings
     template_name = 'mailing/mailing_list.html'
 
     def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.groups.filter(name='Managers').exists():
+            return MailingSettings.objects.all()
         return MailingSettings.objects.filter(owner=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['active_mailings'] = MailingSettings.objects.filter(status='R', owner=self.request.user).count()
         return context
+
+
+class EndMailingView(LoginRequiredMixin, RedirectView):
+    url = reverse_lazy('mailing:mailing_list')
+
+    def get(self, *args, **kwargs):
+        mailing = get_object_or_404(MailingSettings, pk=kwargs['pk'])
+
+        if self.request.user.groups.filter(name='Managers').exists() and mailing.status == 'R':
+            mailing.status = 'E'
+            mailing.save()
+
+        return super().get(*args, **kwargs)
 
 
 class MailingCreateView(LoginRequiredMixin, CreateView):
@@ -88,13 +103,13 @@ class MailingDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class MailingDeleteView(LoginRequiredMixin, ManagerOrSuperuserMixin, DeleteView):
+class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = MailingSettings
     template_name = 'mailing/mailing_confirm_delete.html'
     success_url = reverse_lazy('mailing:mailing_list')
 
 
-class MailingUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = MailingSettings
     form_class = MailingForm
     template_name = 'mailing/mailing_update.html'

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model, authenticate, login
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
@@ -9,10 +10,14 @@ from .forms import UserRegisterForm, BlockUserForm
 from . import services
 
 
-class ManagerOrSuperuserMixin:
-    # Функция для проверки, является ли пользователь менеджером или суперпользователем.
-    def is_manager_or_superuser(self):
-        return self.request.user.is_authenticated and (self.request.user.is_superuser or self.request.user.is_manager)
+class ManagerMixin:
+    def is_manager(self):
+        return self.request.user.is_authenticated and self.request.user.groups.filter(name='Managers').exists()
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.is_manager():
+            return HttpResponseForbidden("У вас нет прав доступа к этой странице.")
+        return super().dispatch(request, *args, **kwargs)
 
 
 class RegisterView(CreateView):
@@ -53,24 +58,7 @@ class EmailVerificationView(View):
         return redirect('users:login')
 
 
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             if user.is_active:
-#                 login(request, user)
-#                 return redirect('home_page')
-#             else:
-#                 messages.error(request, 'Ваш аккаунт заблокирован. Обратитесь в техническую поддержку.')
-#                 return redirect('users:login')
-#         else:
-#             messages.error(request, 'Неверный логин или пароль.')
-#             return redirect('users:login')
-
-
-class BlockUserView(ManagerOrSuperuserMixin, View):
+class BlockUserView(ManagerMixin, View):
     template_name = 'users/block_user.html'
 
     def get(self, request):
