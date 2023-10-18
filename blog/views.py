@@ -49,7 +49,7 @@ class BlogPostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
     """
     model = BlogPost
     permission_required = 'blog.add_blog'
-    fields = ('title', 'content', 'is_published', 'views_count', 'image', 'created_at')
+    fields = ('title', 'content', 'is_published', 'views_count', 'image')
     success_url = reverse_lazy('blog:blogpost_list')
 
     def form_valid(self, form):
@@ -66,7 +66,7 @@ class BlogPostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
     """
     model = BlogPost
     permission_required = 'blog.change_blog'
-    fields = ('title', 'content', 'is_published', 'views_count', 'image', 'created_at')
+    fields = ('title', 'content', 'is_published', 'views_count', 'image')
     success_url = reverse_lazy('blog:blogs')
 
     def get_success_url(self):
