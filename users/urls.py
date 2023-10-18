@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.urls import path, reverse_lazy, include
 from . import views
 from .apps import UsersConfig
-from .views import RegisterView, EmailVerificationView, BlockUserView
+from .views import RegisterView, EmailVerificationView, BlockUserView, CustomLoginView
 from django.contrib.auth import views as auth_views
 
 app_name = UsersConfig.name
@@ -11,7 +11,8 @@ app_name = UsersConfig.name
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('verify/<uuid:email_verification_code>/', EmailVerificationView.as_view(), name='email_verification'),
-    path('login/', LoginView.as_view(template_name='users/login.html'), name='login'),
+    # path('login/', LoginView.as_view(template_name='users/login.html'), name='login'),
+    path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('password_reset/', PasswordResetView.as_view(template_name='users/password_reset_form.html',
                                                       email_template_name="users/password_reset_email.html",
