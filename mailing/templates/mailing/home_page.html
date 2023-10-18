@@ -14,11 +14,11 @@
             <p class="lead text-body-secondary">Управление вашими рассылками</p>
             <p class="py-1 text-body-secondary">Авторизируйтесь для начала работы</p>
             <p>
-                <a href="{% url 'mailing:mailing_list' %}" class="btn btn-success my-1 w-75">Рассылки</a>
+                <a href="{% url 'mailing:mailing_list' %}" class="btn btn-success my-1 w-75">Мои рассылки</a>
             </p>
             <p>
-                {% if user.is_superuser %}
-                <a href="{% url 'mailing:client_list' %}" class="btn btn-success my-1 w-75">Клиенты</a>
+                {% if user.is_superuser or not user|has_group:"Managers" %}
+                <a href="{% url 'mailing:client_list' %}" class="btn btn-success my-1 w-75">Мои клиенты</a>
                 {% endif %}
             </p>
             {% if user.is_superuser or user|has_group:"Managers" %}
@@ -59,7 +59,7 @@
 <div class="text-center container py-3">
     <h1 class="jumbotron-heading">Создайте свою эффективную рассылку с нами!</h1>
     <p>Просто, быстро и надежно. Начните сегодня и убедитесь в преимуществах нашего сервиса.</p>
-    {% if user.is_superuser %}
+    {% if user.is_superuser or not user|has_group:"Managers" %}
     <a href="{% url 'mailing:mailing_form' %}"
        class="btn btn-success my-2 w-25 mt-3 mx-auto d-block d-flex justify-content-center align-items-center">
         Создать рассылку

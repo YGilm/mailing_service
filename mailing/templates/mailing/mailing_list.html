@@ -11,40 +11,45 @@
 <main>
     <div class="album py-5 bg-light">
         <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                {% for item in object_list %}
-                <div class="col">
-                    <div class="card card-custom">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ item.pk }}</h5>
-                            <p class="card-text">Время рассылки: {{ item.time }}</p>
-                            <p class="card-text">Периодичность рассылки: {{ item.periodicity }}</p>
-                            <p class="card-text">Статус рассылки: {{ item.status }}</p>
-                            <div class="d-flex justify-content-between align-items-center mt-4">
-                                <div class="btn-group">
-                                    <a href="{% url 'mailing:mailing_detail' item.pk %}"
-                                       class="btn btn-sm btn-outline-secondary">View</a>
-                                    {% if user.is_superuser or item.owner == user %}
-                                    <a href="{% url 'mailing:mailing_update' item.pk %}"
-                                       class="btn btn-sm btn-outline-secondary">Edit</a>
-                                    <a href="{% url 'mailing:mailing_delete' item.pk %}" class="btn btn-sm btn-danger">Delete</a>
-                                    {% endif %}
-                                    {% if user|has_group:"Managers" and item.status == 'R' %}
-                                    <a href="{% url 'mailing:end_mailing' item.pk %}"
-                                       class="btn btn-sm rounded-pill btn-warning ">Остановить
-                                        рассылку</a>
-                                    {% endif %}
+            {% if not object_list %}
+                <p class="text-center">У вас пока нет рассылок. Чтобы создать рассылку, нажмите на кнопку "Создать рассылку"<br> Для рассылки необходимы клиенты, если вы их еще не добавили, сделайте это на главной странице,<br> нажав кнопку "Мои клиенты".
+                </p>
+            {% else %}
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    {% for item in object_list %}
+                    <div class="col">
+                        <div class="card card-custom">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.pk }}</h5>
+                                <p class="card-text">Время рассылки: {{ item.time }}</p>
+                                <p class="card-text">Периодичность рассылки: {{ item.periodicity }}</p>
+                                <p class="card-text">Статус рассылки: {{ item.status }}</p>
+                                <div class="d-flex justify-content-between align-items-center mt-4">
+                                    <div class="btn-group">
+                                        <a href="{% url 'mailing:mailing_detail' item.pk %}"
+                                           class="btn btn-sm btn-outline-secondary">View</a>
+                                        {% if user.is_superuser or item.owner == user %}
+                                        <a href="{% url 'mailing:mailing_update' item.pk %}"
+                                           class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        <a href="{% url 'mailing:mailing_delete' item.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                                        {% endif %}
+                                        {% if user|has_group:"Managers" and item.status == 'R' %}
+                                        <a href="{% url 'mailing:end_mailing' item.pk %}"
+                                           class="btn btn-sm rounded-pill btn-warning">Остановить рассылку</a>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
+            {% endif %}
         </div>
         <p>
-            <a href="{% url 'mailing:mailing_form' %}" class="btn btn-success my-2 w-25 mt-3 mx-auto d-block">Создать
-                рассылку</a>
+            {% if user.is_superuser or not user|has_group:"Managers" %}
+            <a href="{% url 'mailing:mailing_form' %}" class="btn btn-success my-2 w-25 mt-3 mx-auto d-block">Создать рассылку</a>
+            {% endif %}
         </p>
     </div>
 </main>

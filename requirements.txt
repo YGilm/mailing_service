@@ -31,3 +31,5 @@ stack-data==0.6.2
 traitlets==5.10.0
 typing_extensions==4.8.0
 wcwidth==0.2.6
+redis-5.0.1
+async_timeout-4.0.3

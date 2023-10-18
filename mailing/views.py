@@ -1,10 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import PermissionsMixin
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView, RedirectView
-
 from mailing.forms import MailingForm, ClientForm, MailingMessageForm
 from .models import MailingSettings, Client, MailingMessage, MailingLog
 from .services import send_mailing
@@ -60,6 +60,11 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
     form_class = MailingForm
     template_name = 'mailing/mailing_form.html'
     success_url = reverse_lazy('mailing:mailing_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.groups.filter(name='Managers').exists():
+            return HttpResponseForbidden("У вас нет прав создавать рассылку.")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
